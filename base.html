@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="desafioApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Desafios</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <style>
+    body {
+      background-color: #ffffff;
+      color: #4B0082;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #4B0082;
+      color: white;
+      padding: 1em;
+      text-align: center;
+    }
+    .container {
+      padding: 2em;
+    }
+    .desafio {
+      background-color: #f3f0fa;
+      border: 1px solid #d3cce3;
+      border-radius: 8px;
+      padding: 1em;
+      margin-bottom: 1em;
+    }
+    .titulo {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body ng-controller="DesafioController">
+
+  <header>
+    <h1>Lista de Desafios</h1>
+  </header>
+
+  <div class="container">
+    <div class="desafio" ng-repeat="desafio in desafios">
+      <div class="titulo">{{ desafio.name }}</div>
+      <div>{{ desafio.description || 'Sem descrição disponível.' }}</div>
+    </div>
+  </div>
+
+  <script>
+    angular.module('desafioApp', [])
+      .controller('DesafioController', function($scope, $http) {
+        var req = {
+          method: 'GET',
+          url: 'https://service2.funifier.com/v3/challenge',
+          headers: {
+            "Authorization": "Bearer eyJhbGciOiJIUzUxMiIsImNhbGciOiJHWklQIn0.H4sIAAAAAAAAAD2MMQoCMRBFryJTp3EzZhJ7sdjSA8iYnUAwuCHJoiLe3cii3ePx338B5zjKE_ZgKDg0zg16oEAYNGv0ZC0oqH7O0idFeDpzSmpzL7HJipMk-TM3vnCV3rD383JrvTqc5NgSd7dUKT9x_R5H7oMtIWrryBoF8sircA531rw__4Fje6AAAAA.ZZZEwVq43O83wuGutSTZETTjm-sjBpT3vshrgUGpw1m2zjPJ70xjBJSpJUWiawXe3Zu70eSF7Jowm6KuIH8wMA",
+            "Content-Type": "application/json"
+          }
+        };
+
+        $http(req).then(
+          function(response) {
+            console.log(response.data);
+            $scope.desafios = response.data.data || [];
+          },
+          function(error) {
+            console.error('Erro ao carregar desafios:', error);
+            $scope.desafios = [];
+          }
+        );
+      });
+  </script>
+
+</body>
+</html>
